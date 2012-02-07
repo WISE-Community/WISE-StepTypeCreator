@@ -128,15 +128,17 @@ public class StepTypeCreator {
 								/*
 								 * only look for files that are in the template folder within the jar.
 								 * we will be copying and modifying all of the files in the template
-								 * folder within the jar.
+								 * folder within the jar. we will ignore the meta-inf/manifest.mf and
+								 * StepTypeCreator.class files.
 								 */
-								if(!zipEntry.isDirectory() && zipEntry.getName().startsWith("template/")) {
+								if(!zipEntry.isDirectory() && !zipEntry.getName().toLowerCase().contains("manifest.mf")
+										 && !zipEntry.getName().toLowerCase().contains("steptypecreator.class")) {
 									
-									//get one of the template files
+									//get the path of the file inside the zip e.g. template/icons/template16.png
 									String zipEntryName = zipEntry.getName();
-
-									//get the name of the file
-									String newFileName = zipEntryName.substring(zipEntryName.lastIndexOf("/") + 1);
+									
+									//we will use this variable to modify the file path to use the new step type name
+									String newFileName = zipEntryName;
 									
 									//replace the file extension for templateTemplate.te with the file extension for the new step type
 									newFileName = newFileName.replaceAll("\\.te", "." + newStepTypeExtension);
@@ -147,7 +149,7 @@ public class StepTypeCreator {
 									 * e.g.
 									 * template.html will turn into quiz.html
 									 */
-									String newStepTypeFileName = newFileName.replaceFirst("template", newStepTypeNameFirstLowerCase);
+									String newStepTypeFileName = newFileName.replaceAll("template", newStepTypeNameFirstLowerCase);
 									
 									if(!newFileName.contains("templateTemplate")) {
 										/*
@@ -156,11 +158,11 @@ public class StepTypeCreator {
 										 * e.g.
 										 * TemplateNode.js will turn into QuizNode.js
 										 */
-										newStepTypeFileName = newStepTypeFileName.replaceFirst("Template", newStepTypeNameFirstUpperCase);	
+										newStepTypeFileName = newStepTypeFileName.replaceAll("Template", newStepTypeNameFirstUpperCase);	
 									}
 									
-									//create the new file in the new folder
-									File newFile = new File(newStepTypeFolder, newStepTypeFileName);
+									//create the new file e.g. quiz/icons/quiz16.png
+									File newFile = new File(newStepTypeFileName);
 									
 									//create a string buffer to hold the content of the file we are copying
 									fileContentStringBuffer = new StringBuffer();
@@ -221,7 +223,18 @@ public class StepTypeCreator {
 									bufferedWriter.close();
 									
 									//output the path of the new file we have created
-									System.out.println(newStepTypeFolder.getName() + File.separator + newStepTypeFileName);
+									System.out.println(newStepTypeFileName);
+								} else if(zipEntry.isDirectory()) {
+									//get the path of the folder
+									String zipEntryName = zipEntry.getName();
+									String newFileName = zipEntryName;
+									
+									//replace template with the name of the new step type e.g. quiz
+									String newStepTypeFileName = newFileName.replaceAll("template", newStepTypeNameFirstLowerCase);
+									
+									//make the new folder
+									File newFile = new File(newStepTypeFileName);
+									newFile.mkdir();
 								}
 							}
 						}

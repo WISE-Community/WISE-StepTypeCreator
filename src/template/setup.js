@@ -72,14 +72,30 @@ var dependencies = [
 ];
 
 /*
- * TODO: rename Template
+ * TODO: rename template
+ * For example if you are creating a quiz node and you want to use custom icons,
+ * you would change it to 'quiz' and replace the 'template16.png' and 'template28.png'
+ * files in the node's 'icons' directory with 'quiz16.png' and 'quiz28.png' 
+ * (the icons should be png files with 16x16 and 28x28 pixels respectively)
  * 
+ * TODO: rename Template
  * For example if you are creating a quiz node you would change it to
  * 'Quiz'
+ * 
+ * If you want to provide authors with multiple icon options for this node type,
+ * add another entry to the nodeClasses array and add the corresponding icons
+ * (using that nodeClass in the filenames) to the 'icons' directory
  */
 var nodeClasses = [
-	{nodeClass:'display', nodeClassText:'Template'}
+	{nodeClass:'template', nodeClassText:'Template'}
 ];
+
+/*
+ * TODO: rename template
+ * TODO: rename TemplateNode
+ */
+var nodeIconPath = 'node/template/icons/';
+componentloader.addNodeIconPath('TemplateNode', nodeIconPath);
 
 scriptloader.addScriptToComponent('core', coreScripts);
 scriptloader.addScriptToComponent('core_min', coreScripts);
